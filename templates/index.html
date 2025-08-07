@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>S3 Exposure Checker</title>
+  <!-- You can add CSS files or styles here later -->
+</head>
+<body>
+  <h1>S3 Bucket Exposure Checker</h1>
+
+  <!-- This form sends the bucket name to the server when submitted -->
+  <form method="POST">
+    <!-- Text input where the user types the S3 bucket name -->
+    <input
+      type="text"
+      name="bucket"
+      placeholder="Enter S3 Bucket Name"
+      required
+    />
+    <!-- Submit button triggers the form submission -->
+    <button type="submit">Check</button>
+  </form>
+
+  <!-- This block only shows if 'result' exists (i.e., after form submission) -->
+  {% if result %}
+    <!-- Display the severity level returned by the server -->
+    <h3>Severity: {{ severity }}</h3>
+
+    <!-- List all findings/messages about the bucket -->
+    <ul>
+      <!-- Loop through each item in the 'result' list and create a list item -->
+      {% for item in result %}
+        <li>{{ item }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</body>
+</html>
