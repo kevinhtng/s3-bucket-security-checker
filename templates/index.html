@@ -65,15 +65,28 @@
         <!-- Display scanned bucket name -->
         <h2>Scan Results for: {{ result.Bucket }}</h2>
 
-        <!-- Loop over each issue in result.Issues -->
-        {% for issue in result.Issues %}
-            <!-- Each issue box with severity-based styling -->
-            <div class="issue severity-{{ issue.Severity }}">
-                <strong>Severity:</strong> {{ issue.Severity }}<br>
-                <strong>Description:</strong> {{ issue.Description }}<br>
-                <strong>Remediation:</strong> {{ issue.Remediation }}
-            </div>
-        {% endfor %}
-    {% endif %}
+{% if result %}
+    <!-- This opens the results block -->
+
+    {% for issue in result.Issues %}
+        <div class="issue severity-{{ issue.Severity }}">
+            <strong>Severity:</strong>
+            {% if issue.Severity == 'High' %}
+                🔴 High
+            {% elif issue.Severity == 'Medium' %}
+                🟠 Medium
+            {% elif issue.Severity == 'Low' %}
+                🟢 Low
+            {% else %}
+                {{ issue.Severity }}
+            {% endif %}
+            <br>
+            <strong>Description:</strong> {{ issue.Description }}<br>
+            <strong>Remediation:</strong> {{ issue.Remediation }}
+        </div>
+    {% endfor %}
+
+{% endif %}
+
 </body>
 </html>
