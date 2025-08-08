@@ -1,38 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>S3 Exposure Checker</title>
-  <!-- You can add CSS files or styles here later -->
+    <meta charset="UTF-8"> <!-- Sets character encoding -->
+    <title>S3 Bucket Security Checker</title> <!-- Page title -->
+
+    <style>
+        /* Basic page styling */
+        body {
+            font-family: Arial, sans-serif;
+            padding: 2em;
+            background: #f4f4f4;
+        }
+
+        /* Heading style */
+        h1 {
+            color: #333;
+        }
+
+        /* Text input style */
+        input[type="text"] {
+            padding: 0.5em;
+            width: 300px;
+        }
+
+        /* Button style */
+        button {
+            padding: 0.5em 1em;
+        }
+
+        /* Container for each issue */
+        .issue {
+            background: #fff;
+            border: 1px solid #ddd;
+            margin-top: 1em;
+            padding: 1em;
+        }
+
+        /* Severity color indicators */
+        .severity-High {
+            border-left: 5px solid red;    /* Red for High severity */
+        }
+        .severity-Medium {
+            border-left: 5px solid orange; /* Orange for Medium severity */
+        }
+        .severity-Low {
+            border-left: 5px solid green;  /* Green for Low severity */
+        }
+    </style>
 </head>
 <body>
-  <h1>S3 Bucket Exposure Checker</h1>
+    <!-- Page heading -->
+    <h1>S3 Bucket Security Checker</h1>
 
-  <!-- This form sends the bucket name to the server when submitted -->
-  <form method="POST">
-    <!-- Text input where the user types the S3 bucket name -->
-    <input
-      type="text"
-      name="bucket"
-      placeholder="Enter S3 Bucket Name"
-      required
-    />
-    <!-- Submit button triggers the form submission -->
-    <button type="submit">Check</button>
-  </form>
+    <!-- Form to submit bucket name, uses POST method -->
+    <form method="POST">
+        <!-- Text input for bucket name, required field -->
+        <input type="text" name="bucket_name" placeholder="Enter bucket name..." required>
+        <!-- Submit button -->
+        <button type="submit">Scan</button>
+    </form>
 
-  <!-- This block only shows if 'result' exists (i.e., after form submission) -->
-  {% if result %}
-    <!-- Display the severity level returned by the server -->
-    <h3>Severity: {{ severity }}</h3>
+    <!-- Flask template: only show results if 'result' exists -->
+    {% if result %}
+        <!-- Display scanned bucket name -->
+        <h2>Scan Results for: {{ result.Bucket }}</h2>
 
-    <!-- List all findings/messages about the bucket -->
-    <ul>
-      <!-- Loop through each item in the 'result' list and create a list item -->
-      {% for item in result %}
-        <li>{{ item }}</li>
-      {% endfor %}
-    </ul>
-  {% endif %}
+        <!-- Loop over each issue in result.Issues -->
+        {% for issue in result.Issues %}
+            <!-- Each issue box with severity-based styling -->
+            <div class="issue severity-{{ issue.Severity }}">
+                <strong>Severity:</strong> {{ issue.Severity }}<br>
+                <strong>Description:</strong> {{ issue.Description }}<br>
+                <strong>Remediation:</strong> {{ issue.Remediation }}
+            </div>
+        {% endfor %}
+    {% endif %}
 </body>
 </html>
