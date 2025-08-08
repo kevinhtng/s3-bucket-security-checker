@@ -1,91 +1,96 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html> <!-- Declares this is an HTML5 document -->
+<html lang="en"> <!-- Document language is English -->
 <head>
-    <meta charset="UTF-8"> <!-- Sets character encoding -->
-    <title>S3 Bucket Security Checker</title> <!-- Page title -->
+    <meta charset="UTF-8"> <!-- Ensures proper character encoding -->
+    <title>S3 Bucket Security Checker</title> <!-- Page title in browser tab -->
 
     <style>
-        /* Basic page styling */
+        /* General page styling */
         body {
-            font-family: Arial, sans-serif;
-            padding: 2em;
-            background: #f4f4f4;
+            font-family: Arial, sans-serif; /* Set font */
+            padding: 2em; /* Space inside page */
+            background: #f4f4f4; /* Light grey background */
         }
 
         /* Heading style */
         h1 {
-            color: #333;
+            color: #333; /* Dark grey text */
         }
 
-        /* Text input style */
+        /* Style for text input fields */
         input[type="text"] {
-            padding: 0.5em;
-            width: 300px;
+            padding: 0.5em; /* Space inside input */
+            width: 300px; /* Fixed width */
         }
 
-        /* Button style */
+        /* Style for buttons */
         button {
-            padding: 0.5em 1em;
+            padding: 0.5em 1em; /* Space inside button */
         }
 
-        /* Container for each issue */
+        /* Box styling for each issue */
         .issue {
-            background: #fff;
-            border: 1px solid #ddd;
-            margin-top: 1em;
-            padding: 1em;
+            background: #fff; /* White background */
+            border: 1px solid #ddd; /* Light grey border */
+            margin-top: 1em; /* Space above each issue box */
+            padding: 1em; /* Space inside the box */
         }
 
-        /* Severity color indicators */
+        /* Color-coded severity indicators (left border) */
         .severity-High {
-            border-left: 5px solid red;    /* Red for High severity */
+            border-left: 5px solid red; /* Red for High */
         }
         .severity-Medium {
-            border-left: 5px solid orange; /* Orange for Medium severity */
+            border-left: 5px solid orange; /* Orange for Medium */
         }
         .severity-Low {
-            border-left: 5px solid green;  /* Green for Low severity */
+            border-left: 5px solid green; /* Green for Low */
         }
     </style>
 </head>
 <body>
-    <!-- Page heading -->
+    <!-- Main heading of the page -->
     <h1>S3 Bucket Security Checker</h1>
 
-    <!-- Form to submit bucket name, uses POST method -->
+    <!-- Form to enter the bucket name -->
+    <!-- method="POST" means it sends data to Flask when submitted -->
     <form method="POST">
-        <!-- Text input for bucket name, required field -->
+        <!-- Text field where user types bucket name -->
+        <!-- "required" means user must enter something before submitting -->
         <input type="text" name="bucket_name" placeholder="Enter bucket name..." required>
-        <!-- Submit button -->
+        <!-- Button to submit form -->
         <button type="submit">Scan</button>
     </form>
 
-    <!-- Flask template: only show results if 'result' exists -->
+    <!-- Jinja2: Only show this block if there is a 'result' variable from Flask -->
     {% if result %}
-        <!-- Display scanned bucket name -->
+        <!-- Show the scanned bucket's name -->
         <h2>Scan Results for: {{ result.Bucket }}</h2>
 
-{% if result %}
-    <h2>Scan Results for: {{ result.Bucket }}</h2>
+        <!-- Loop over each issue in the bucket scan results -->
+        {% for issue in result.Issues %}
+            <!-- Apply severity class for border color -->
+            <div class="issue severity-{{ issue.Severity }}">
+                <!-- Show severity with emoji depending on level -->
+                <strong>Severity:</strong>
+                {% if issue.Severity == 'High' %}
+                    🔴 High
+                {% elif issue.Severity == 'Medium' %}
+                    🟠 Medium
+                {% elif issue.Severity == 'Low' %}
+                    🟢 Low
+                {% else %}
+                    {{ issue.Severity }} <!-- Fallback if severity is unknown -->
+                {% endif %}
+                <br>
 
-    {% for issue in result.Issues %}
-        <div class="issue severity-{{ issue.Severity }}">
-            <strong>Severity:</strong>
-            {% if issue.Severity == 'High' %}
-                🔴 High
-            {% elif issue.Severity == 'Medium' %}
-                🟠 Medium
-            {% elif issue.Severity == 'Low' %}
-                🟢 Low
-            {% else %}
-                {{ issue.Severity }}
-            {% endif %}
-            <br>
-            <strong>Description:</strong> {{ issue.Description }}<br>
-            <strong>Remediation:</strong> {{ issue.Remediation }}
-        </div>
-    {% endfor %}
-{% endif %}
+                <!-- Show issue description -->
+                <strong>Description:</strong> {{ issue.Description }}<br>
 
+                <!-- Show remediation suggestion -->
+                <strong>Remediation:</strong> {{ issue.Remediation }}
+            </div>
+        {% endfor %}
+    {% endif %}
 </body>
 </html>
