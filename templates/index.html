@@ -66,7 +66,7 @@
         <h2>Scan Results for: {{ result.Bucket }}</h2>
 
 {% if result %}
-    <!-- This opens the results block -->
+    <h2>Scan Results for: {{ result.Bucket }}</h2>
 
     {% for issue in result.Issues %}
         <div class="issue severity-{{ issue.Severity }}">
@@ -85,7 +85,6 @@
             <strong>Remediation:</strong> {{ issue.Remediation }}
         </div>
     {% endfor %}
-
 {% endif %}
 
 </body>
